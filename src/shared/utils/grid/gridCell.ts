@@ -27,3 +27,19 @@ export const getCellDistance = (cell: Cell, inf: number) => {
         return cell.distance;
     }
 };
+
+export const getCellId = (row: number, col: number, sizeC: number) => {
+    return row * sizeC + col;
+};
+
+export const extractCellRowCol = (id: number, sizeC: number) => {
+    const row = Math.trunc(id / sizeC);
+    const col = id % sizeC;
+
+    return { row, col };
+};
+
+export const extractRowColFromElem = (elem: HTMLDivElement, sizeC: number) => {
+    const cellId = Number(elem.dataset.id);
+    return extractCellRowCol(cellId, sizeC);
+};

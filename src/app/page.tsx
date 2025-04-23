@@ -19,7 +19,6 @@ export default function Home() {
         handleMouseUp,
         clearWalls,
     } = useGrid();
-    console.log({ grid });
 
     return (
         <main className="flex h-screen w-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 to-slate-900 text-white">
@@ -32,6 +31,8 @@ export default function Home() {
                 gridShape="hexagon"
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
+                onMouseDown={handleMouseDown}
+                onMouseEnter={handleMouseEnter}
             />
         </main>
     );

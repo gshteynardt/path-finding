@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
+import type { MouseEvent } from 'react';
 
 import { useCalculateGridDimensions } from '@/shared/hooks/useCalculateGridDimensions';
 import { initializeGrid } from '@/shared/utils';
 import type { Cell } from '@/shared/types';
 import { GridState, CellState, AlgorithmState } from '@/shared/types';
+import { extractRowColFromElem } from '@/shared/utils';
 
 export const useGrid = () => {
     const [grid, setGrid] = useState<Cell[][]>([]);
@@ -57,12 +59,19 @@ export const useGrid = () => {
         setEndCell(end);
     }, [end, start]);
 
-    const handleMouseDown = useCallback((row: number, col: number, e: MouseEvent) => {
+    const handleMouseDown = useCallback((event: MouseEvent<HTMLDivElement>) => {
         if (stopMouseEvent) {
             return;
         }
 
-        e.preventDefault();
+        event.preventDefault();
+
+        const elem = event.target as HTMLDivElement;
+        const { row, col } = extractRowColFromElem(elem, sizeC);
+
+        if (isNaN(row) || isNaN(col)) {
+            return;
+        }
 
         if (sizeR === 0 || sizeC === 0 || !(row < sizeR && col < sizeC)) {
             console.error('Invalid cell coordinates:', { sizeR, sizeC, row, col });
@@ -98,8 +107,15 @@ export const useGrid = () => {
         }
     }, [grid, sizeC, sizeR, stopMouseEvent]);
 
-    const handleMouseEnter = useCallback((row: number, col: number) => {
+    const handleMouseEnter = useCallback((event: MouseEvent<HTMLDivElement>) => {
         if (stopMouseEvent) {
+            return;
+        }
+
+        const elem = event.target as HTMLDivElement;
+        const { row, col } = extractRowColFromElem(elem, sizeC);
+
+        if (isNaN(row) || isNaN(col)) {
             return;
         }
 

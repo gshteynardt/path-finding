@@ -4,7 +4,7 @@ import type { MouseEvent, RefObject } from 'react';
 
 import { GridCell } from '@/shared/components/GridCell';
 import type { Grid as GridType, GridShape} from '@/shared/types';
-import { getCellColor, getCellDistance } from '@/shared/utils';
+import { getCellColor, getCellDistance, getCellId } from '@/shared/utils';
 
 export type Props = {
     gridRef: RefObject<HTMLDivElement | null>;
@@ -15,10 +15,23 @@ export type Props = {
     gridShape: GridShape;
     onMouseUp: (event: MouseEvent<HTMLDivElement>) => void;
     onMouseLeave: (event: MouseEvent<HTMLDivElement>) => void;
+    onMouseDown: (event: MouseEvent<HTMLDivElement>) => void;
+    onMouseEnter: (event: MouseEvent<HTMLDivElement>) => void;
 };
 
 export const Grid = (props: Props) => {
-    const { gridRef, grid, sizeC, sizeR, cellSize, gridShape, onMouseUp, onMouseLeave } = props;
+    const {
+        gridRef,
+        grid,
+        sizeC,
+        sizeR,
+        cellSize,
+        gridShape,
+        onMouseUp,
+        onMouseLeave,
+        onMouseDown,
+        onMouseEnter,
+    } = props;
 
     return (
         <div
@@ -26,6 +39,8 @@ export const Grid = (props: Props) => {
             ref={gridRef}
             onMouseUp={onMouseUp}
             onMouseLeave={onMouseLeave}
+            onMouseDown={onMouseDown}
+            onMouseOver={onMouseEnter}
         >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1),transparent_70%)]"></div>
             <div
@@ -51,6 +66,7 @@ export const Grid = (props: Props) => {
                             return (
                                 <GridCell
                                     key={`${rowIdx}-${colIdx}`}
+                                    id={getCellId(rowIdx, colIdx, sizeC)}
                                     color={getCellColor(cell.state)}
                                     size={cellSize}
                                     shape={gridShape}
