@@ -1,9 +1,11 @@
 'use client';
 
+import type { GridShape } from '@/shared/types';
+
 export type Props = {
     className?: string;
     distance?: number;
-    shape: 'square' | 'hexagon';
+    shape: GridShape;
     size: number;
     color: string;
 };

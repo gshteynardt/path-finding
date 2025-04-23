@@ -1,1 +1,1 @@
-export * from './gridCell';
+export * from './grid';

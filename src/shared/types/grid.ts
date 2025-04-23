@@ -31,3 +31,4 @@ export type Cell = {
 };
 
 export type Grid = Cell[][];
+export type GridShape = 'square' | 'hexagon';
