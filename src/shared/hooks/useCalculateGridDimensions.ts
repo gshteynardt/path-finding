@@ -55,7 +55,7 @@ export const useCalculateGridDimensions = (toggleGridState: ToggleGridState) => 
                 return { sizeR: calculatedR, sizeC: calculatedC };
             });
 
-            toggleGridState(GridState.MEASURED);
+            requestAnimationFrame(() => toggleGridState(GridState.MEASURED));
         };
 
         updateDimensions();

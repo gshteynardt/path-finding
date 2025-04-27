@@ -7,6 +7,11 @@ import type { Cell } from '@/shared/types';
 import { GridState, CellState, AlgorithmState } from '@/shared/types';
 import { extractRowColFromElem } from '@/shared/utils';
 
+// export type Props = {
+//     algorithmState: AlgorithmState;
+//     setAlgorithmState: (state: AlgorithmState) => void;
+// };
+
 export const useGrid = () => {
     const [grid, setGrid] = useState<Cell[][]>([]);
     const [gridState, setGridState] = useState<GridState>(GridState.IDLE);
@@ -20,35 +25,20 @@ export const useGrid = () => {
     } | null>();
 
     const { sizeR, sizeC, cellSize, start, end, gridContainerRef } = useCalculateGridDimensions(setGridState);
+    // const stopMouseEvent = algorithmState === AlgorithmState.RUNNING || algorithmState === AlgorithmState.DRAWING_PATH;
     const stopMouseEvent = false;
 
-    const getInitializedGrid = useCallback(() => {
-        if (!start || !end) {
-            return [];
-        }
-
-        const newGrid = initializeGrid({ sizeR, sizeC, start, end });
+    const initializeGridState = useCallback(() => {
+        console.log({ startCell, endCell });
+        const newGrid = initializeGrid({ sizeR, sizeC, start: startCell, end: endCell });
 
         setGrid(newGrid);
-        // setPath([]);
-        // setDisplayedPath([]);
-        // setCurrentPathIndex(0);
         // setAlgorithmState(AlgorithmState.IDLE);
-    }, [
-        start,
-        end,
-        sizeR,
-        sizeC,
-        setGrid,
-        // setPath,
-        // setDisplayedPath,
-        // setCurrentPathIndex,
-        // setAlgorithmState,
-    ]);
+    }, [sizeR, sizeC, startCell, endCell]);
 
     useEffect(() => {        
-        getInitializedGrid();
-    }, [getInitializedGrid]);
+        initializeGridState();
+    }, [initializeGridState]);
 
     useEffect(() => {
         if (!start || !end) {
@@ -111,10 +101,10 @@ export const useGrid = () => {
         if (stopMouseEvent) {
             return;
         }
-
+    
         const elem = event.target as HTMLDivElement;
         const { row, col } = extractRowColFromElem(elem, sizeC);
-
+    
         if (isNaN(row) || isNaN(col)) {
             return;
         }
@@ -123,9 +113,9 @@ export const useGrid = () => {
             console.error('Invalid cell coordinates:', { sizeR, sizeC, row, col });
             return;
         }
-
+    
         const cell = grid[row][col];
-
+    
         if (gridState === GridState.DRAGGING && draggedCell) {
             if (
                 cell.state === CellState.WALL ||
@@ -134,38 +124,54 @@ export const useGrid = () => {
             ) {
                 return;
             }
-
+    
             if (!start || !end) {
                 return;
             }
+    
+            setGrid((prevGrid) => {
+                const newGrid = prevGrid.map((row) =>
+                    row.map((cell) => {
+                        if (draggedCell.state === CellState.START && cell.state === CellState.START) {
+                            return { ...cell, state: CellState.EMPTY };
+                        }
 
-            const newGrid = [...grid];
+                        if (draggedCell.state === CellState.END && cell.state === CellState.END) {
+                            return { ...cell, state: CellState.EMPTY };
+                        }
 
+                        return cell;
+                    })
+                );
+    
+                newGrid[row][col].state = draggedCell.state;
+                return newGrid;
+            });
+    
             if (draggedCell.state === CellState.START) {
-                newGrid[startCell.row][startCell.col].state = CellState.EMPTY;
                 setStartCell({ row, col });
             } else if (draggedCell.state === CellState.END) {
-                newGrid[endCell.row][endCell.col].state = CellState.EMPTY;
                 setEndCell({ row, col });
             }
-
-            newGrid[row][col].state = draggedCell.state;
-
-            setGrid(newGrid);
+    
             setDraggedCell({ ...draggedCell, row, col });
             return;
         }
-
+    
         if (gridState === GridState.DRAWING_WALLS && cell.state === CellState.EMPTY) {
-            const newGrid = [...grid];
-            newGrid[row][col].state = CellState.WALL;
-            setGrid(newGrid);
+            setGrid((prevGrid) => {
+                const newGrid = prevGrid.map(row => [...row]);
+                newGrid[row][col].state = CellState.WALL;
+                return newGrid;
+            });
         } else if (gridState === GridState.ERASING_WALLS && cell.state === CellState.WALL) {
-            const newGrid = [...grid];
-            newGrid[row][col].state = CellState.EMPTY;
-            setGrid(newGrid);
+            setGrid((prevGrid) => {
+                const newGrid = prevGrid.map(row => [...row]);
+                newGrid[row][col].state = CellState.EMPTY;
+                return newGrid;
+            });
         }
-    }, [draggedCell, end, endCell.col, endCell.row, grid, gridState, sizeC, sizeR, start, startCell.col, startCell.row, stopMouseEvent]);
+    }, [draggedCell, end, grid, gridState, sizeC, sizeR, start, stopMouseEvent]);
 
     const handleMouseUp = useCallback(() => {
         if (stopMouseEvent) {
@@ -185,6 +191,7 @@ export const useGrid = () => {
                 if (cell.state === CellState.WALL) {
                     return { ...cell, state: CellState.EMPTY };
                 }
+
                 return cell;
             }),
         );
@@ -201,6 +208,7 @@ export const useGrid = () => {
         sizeC,
         cellSize,
         gridContainerRef,
+        initializeGrid: initializeGridState,
         setGrid,
         setGridState,
         handleMouseDown,

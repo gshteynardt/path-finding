@@ -23,12 +23,21 @@ export const getCellColor = (state: CellState) => {
 };
 
 export const getCellDistance = (cell: Cell, inf: number) => {
-    if ((cell.state === CellState.VISITED || cell.state === CellState.PATH) && cell.distance !== inf) {
+    if (
+        (cell.state === CellState.VISITED || cell.state === CellState.PATH) &&
+        cell.distance !== inf
+    ) {
         return cell.distance;
     }
 };
 
-export const getCellId = (row: number, col: number, sizeC: number) => {
+type GetCellIdProps = {
+    row: number;
+    col: number;
+    sizeC: number;
+};
+
+export const getCellId = ({ row, col, sizeC }: GetCellIdProps) => {
     return row * sizeC + col;
 };
 

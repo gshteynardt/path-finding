@@ -17,7 +17,7 @@ export const GridCell = (props: Props) => {
 
     return (
         <div
-            className={`${color} will-change-transform transition-colors duration-300 ease-in-out ${cellShape} ${className} relative flex items-center justify-center`}
+            className={`${color} transition-colors duration-300 ease-in-out will-change-transform ${cellShape} ${className} relative flex items-center justify-center`}
             style={{
                 width: `${size}px`,
                 height: `${size}px`,
