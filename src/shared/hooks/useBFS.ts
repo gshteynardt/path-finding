@@ -121,13 +121,12 @@ export const useBFS = ({
                 setAlgorithmStats({
                     pathLength: pathFound.length,
                     timeTaken: timeTaken,
-                    operations: seenRef.current.length,
+                    operations: queueRef.current.length,
                     showStats: true,
                 });
 
                 toggleAlgorithmState(AlgorithmState.COMPLETED);
                 animatePathDrawing(pathFound);
-
                 return;
             }
 
