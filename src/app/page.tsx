@@ -1,4 +1,5 @@
 'use client';
+import { useState, useCallback } from 'react';
 
 import { Grid } from '@/shared/components/Grid';
 import { Header } from '@/shared/components/Header';
@@ -9,6 +10,8 @@ import { useAlgorithm } from '@/shared/hooks/useAlgorithm';
 import { AlgorithmState } from '@/shared/types';
 
 export default function Home() {
+    const [algorithmState, setAlgorithmState] = useState<AlgorithmState>(AlgorithmState.IDLE);
+
     const {
         gridState,
         grid,
@@ -24,7 +27,7 @@ export default function Home() {
         handleMouseEnter,
         handleMouseUp,
         clearWalls,
-    } = useGrid();
+    } = useGrid({ algorithmState });
 
     const INF = sizeR * sizeC;
 
@@ -32,9 +35,7 @@ export default function Home() {
         animationRef,
         pathAnimationTimeoutsRef,
         startTimeRef,
-        algorithmState,
         algorithmStats,
-        setAlgorithmState,
         setAlgorithmStats,
         animatePathDrawing,
         reconstructPath,
@@ -42,6 +43,7 @@ export default function Home() {
         speed: 150,
         INF,
         setGrid,
+        setAlgorithmState,
     });
 
     const {
@@ -73,7 +75,7 @@ export default function Home() {
     const isComplete = algorithmState === AlgorithmState.COMPLETED;
     const isDrawingPath = algorithmState === AlgorithmState.DRAWING_PATH;
 
-    const resetGrid = () => {
+    const resetGrid = useCallback(() => {
         if (animationRef.current) {
             cancelAnimationFrame(animationRef.current);
             animationRef.current = null;
@@ -88,9 +90,9 @@ export default function Home() {
         initializeGrid();
         setAlgorithmStats((prev) => ({ ...prev, showStats: false }));
         resetBFSState();
-    };
+    }, [animationRef, initializeGrid, pathAnimationTimeoutsRef, resetBFSState, setAlgorithmStats]);
 
-    const toggleRunning = () => {
+    const toggleRunning = useCallback(() => {
         if (isDrawingPath) {
             return;
         }
@@ -111,7 +113,7 @@ export default function Home() {
                 animationRef.current = requestAnimationFrame(animateBFS);
             }
         }
-    };
+    }, [animateBFS, animationRef, isComplete, isDrawingPath, isRunning, queue.length, runAlgorithm]);
 
     return (
         <main className="flex h-screen w-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 to-slate-900 text-white">

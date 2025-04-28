@@ -1,6 +1,17 @@
 import { useState } from 'react';
 
 import {
+    Play,
+    Pause,
+    RotateCcw,
+    Trash2,
+    Info,
+    Hexagon,
+    ChevronDown,
+    ChevronUp,
+} from 'lucide-react';
+
+import {
     TooltipProvider,
     Tooltip,
     TooltipTrigger,
@@ -14,17 +25,6 @@ import {
     SheetTrigger,
 } from '@/shared/components/Sheet';
 import { Button } from '@/shared/components/Button';
-
-import {
-    Play,
-    Pause,
-    RotateCcw,
-    Trash2,
-    Info,
-    Hexagon,
-    ChevronDown,
-    ChevronUp,
-} from 'lucide-react';
 
 export type Props = {
     isDrawingPath: boolean;
@@ -80,7 +80,7 @@ export const Header = ({
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <Sheet>
+                    {/* <Sheet>
                         <SheetTrigger asChild>
                             <Button
                                 variant="ghost"
@@ -184,7 +184,7 @@ export const Header = ({
                                 </div>
                             </SheetHeader>
                         </SheetContent>
-                    </Sheet>
+                    </Sheet> */}
                 </div>
             </div>
             {showControls && (

@@ -68,7 +68,7 @@ export const useBFS = ({
 
         newGrid[startR][startC].distance = 0;
         const initialQueue = [{ row: startR, col: startC }];
-        console.log({ startR, startC });
+
         const seen: boolean[] = Array(sizeR * sizeC).fill(false);
         seen[getCellId({ ...start, sizeC })] = true;
 
