@@ -1,15 +1,15 @@
 import animate from 'tailwindcss-animate';
-import type { Config } from 'tailwindcss';
 
-const config: Config = {
-    darkMode: ['class'],
-    content: [
-        './pages/**/*.{js,ts,jsx,tsx,mdx}',
-        './components/**/*.{js,ts,jsx,tsx,mdx}',
-        './app/**/*.{js,ts,jsx,tsx,mdx}',
-        '*.{js,ts,jsx,tsx,mdx}',
-        './.storybook/**/*.{js,ts,jsx,tsx}',
-    ],
+const config = {
+    darkMode: 'class',
+    content: {
+        files: [
+            './src/app/**/*.{ts,tsx,js,jsx,mdx}',
+            './src/shared/**/*.{ts,tsx,js,jsx,mdx}',
+            './.storybook/**/*.{ts,tsx,js,jsx,mdx}',
+        ],
+        safelist: [],
+    },
     theme: {
         extend: {
             colors: {

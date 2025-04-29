@@ -1,15 +1,5 @@
 import { useState } from 'react';
-
-import {
-    Play,
-    Pause,
-    RotateCcw,
-    Trash2,
-    Info,
-    Hexagon,
-    ChevronDown,
-    ChevronUp,
-} from 'lucide-react';
+import { Hexagon, ChevronDown, ChevronUp } from 'lucide-react';
 
 import {
     TooltipProvider,
@@ -25,10 +15,13 @@ import {
     SheetTrigger,
 } from '@/shared/components/Sheet';
 import { Button } from '@/shared/components/Button';
+import { ControlsPanel } from '@/shared/components/ControlsPanel';
 
 export type Props = {
     isDrawingPath: boolean;
     isRunning: boolean;
+    speed: number;
+    setSpeed: (speed: number) => void;
     toggleRunning: () => void;
     clearWalls: () => void;
     resetGrid: () => void;
@@ -37,6 +30,8 @@ export type Props = {
 export const Header = ({
     isDrawingPath,
     isRunning,
+    speed,
+    setSpeed,
     toggleRunning,
     clearWalls,
     resetGrid,
@@ -188,62 +183,15 @@ export const Header = ({
                 </div>
             </div>
             {showControls && (
-                <div className="absolute right-4 top-20 z-100 w-72 overflow-hidden rounded-xl border border-slate-800/50 bg-slate-900/80 shadow-lg backdrop-blur-md">
-                    <div className="border-b border-slate-800/50 p-4">
-                        <h2 className="text-lg font-semibold text-white">
-                            Control Panel
-                        </h2>
-                    </div>
-                    <div className="space-y-6 p-4">
-                        {/* Core Controls */}
-                        <div className="space-y-3">
-                            <h3 className="text-sm font-medium text-slate-400">
-                                Core Controls
-                            </h3>
-                            <div className="flex gap-2">
-                                <Button
-                                    variant="outline"
-                                    onClick={toggleRunning}
-                                    disabled={isDrawingPath}
-                                    className={`flex-1 rounded-full ${
-                                        isRunning
-                                            ? 'border-rose-400 bg-rose-500 hover:bg-rose-600'
-                                            : 'border-emerald-400 bg-emerald-500 hover:bg-emerald-600'
-                                    } shadow-lg ${
-                                        isDrawingPath
-                                            ? 'cursor-not-allowed opacity-50'
-                                            : ''
-                                    }`}
-                                >
-                                    {isRunning ? (
-                                        <Pause className="mr-2 size-4" />
-                                    ) : (
-                                        <Play className="mr-2 size-4" />
-                                    )}
-                                    {isRunning ? 'Stop' : 'Start'}
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={resetGrid}
-                                    disabled={isRunning || isDrawingPath}
-                                    className="flex-1 rounded-full border-slate-700 text-slate-300 hover:bg-slate-800"
-                                >
-                                    <RotateCcw className="mr-2 size-4" />
-                                    Restart
-                                </Button>
-                            </div>
-                            <Button
-                                variant="outline"
-                                onClick={clearWalls}
-                                disabled={isRunning || isDrawingPath}
-                                className="w-full rounded-full border-slate-700 text-slate-300 hover:bg-slate-800"
-                            >
-                                <Trash2 className="mr-2 size-4" />
-                                Clear Walls
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                <ControlsPanel
+                    isRunning={isRunning}
+                    isDrawingPath={isDrawingPath}
+                    speed={speed}
+                    setSpeed={setSpeed}
+                    resetGrid={resetGrid}
+                    toggleRunning={toggleRunning}
+                    clearWalls={clearWalls}
+                />
             )}
         </>
     );

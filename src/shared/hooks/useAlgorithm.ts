@@ -11,13 +11,14 @@ import {
 } from '@/shared/types';
 
 export type Props = {
-    speed: number;
     setGrid: Dispatch<SetStateAction<Cell[][]>>;
     INF: number;
     setAlgorithmState: (state: AlgorithmState) => void;
 };
 
-export const useAlgorithm = ({ speed, setGrid, INF, setAlgorithmState }: Props) => {
+export const useAlgorithm = ({ setGrid, INF, setAlgorithmState }: Props) => {
+    const [speed, setSpeed] = useState(50);
+
     const [algorithmStats, setAlgorithmStats] = useState<AlgorithmStats>({
         pathLength: 0,
         timeTaken: 0,
@@ -131,6 +132,8 @@ export const useAlgorithm = ({ speed, setGrid, INF, setAlgorithmState }: Props) 
         pathAnimationTimeoutsRef,
         startTimeRef,
         algorithmStats,
+        speed,
+        setSpeed,
         setAlgorithmState,
         setAlgorithmStats,
         reconstructPath,

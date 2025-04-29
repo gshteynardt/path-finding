@@ -36,11 +36,12 @@ export default function Home() {
         pathAnimationTimeoutsRef,
         startTimeRef,
         algorithmStats,
+        speed,
+        setSpeed,
         setAlgorithmStats,
         animatePathDrawing,
         reconstructPath,
     } = useAlgorithm({
-        speed: 150,
         INF,
         setGrid,
         setAlgorithmState,
@@ -57,7 +58,7 @@ export default function Home() {
         sizeC,
         start,
         end,
-        speed: 90,
+        speed,
         INF,
         animationRef,
         pathAnimationTimeoutsRef,
@@ -120,6 +121,8 @@ export default function Home() {
             <Header
                 isRunning={isRunning}
                 isDrawingPath={isDrawingPath}
+                speed={speed}
+                setSpeed={setSpeed}
                 resetGrid={resetGrid}
                 toggleRunning={toggleRunning}
                 clearWalls={clearWalls}
