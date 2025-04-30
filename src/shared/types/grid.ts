@@ -30,5 +30,11 @@ export type Cell = {
     parent: Point | null;
 };
 
+export type DraggedCell = {
+    state: CellState;
+    row: number;
+    col: number;
+};
+
 export type Grid = Cell[][];
 export type GridShape = 'square' | 'hexagon';

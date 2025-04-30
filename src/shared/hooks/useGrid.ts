@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import type { MouseEvent } from 'react';
 
 import { useCalculateGridDimensions } from '@/shared/hooks/useCalculateGridDimensions';
 import { initializeGrid } from '@/shared/utils';
-import type { Cell } from '@/shared/types';
+import type { Cell, DraggedCell } from '@/shared/types';
 import { GridState, CellState, AlgorithmState } from '@/shared/types';
 import { extractRowColFromElem } from '@/shared/utils';
 
@@ -16,13 +16,7 @@ export const useGrid = ({ algorithmState }: Props) => {
     const [gridState, setGridState] = useState<GridState>(GridState.IDLE);
     const [startCell, setStartCell] = useState({ row: 5, col: 5 });
     const [endCell, setEndCell] = useState({ row: 15, col: 25 });
-
-    const [draggedCell, setDraggedCell] = useState<{
-        state: CellState;
-        row: number;
-        col: number;
-    } | null>();
-
+    const [draggedCell, setDraggedCell] = useState<DraggedCell | null>();
     const { sizeR, sizeC, cellSize, start, end, gridContainerRef } = useCalculateGridDimensions(setGridState);
 
     const stopMouseEvent = algorithmState === AlgorithmState.RUNNING ||
@@ -33,11 +27,15 @@ export const useGrid = ({ algorithmState }: Props) => {
         const newGrid = initializeGrid({ sizeR, sizeC, start: startCell, end: endCell });
 
         setGrid(newGrid);
-    }, [startCell, endCell, sizeR, sizeC]);
+    }, [sizeR, sizeC, startCell, endCell]);
 
-    useEffect(() => {        
+    useEffect(() => {
+        if (gridState !== GridState.MEASURING) {
+            return;
+        }
+
         initializeGridState();
-    }, [initializeGridState]);
+    }, [gridState, initializeGridState]);
 
     useEffect(() => {
         if (!start || !end) {
@@ -142,7 +140,7 @@ export const useGrid = ({ algorithmState }: Props) => {
                         return cell;
                     })
                 );
-    
+
                 newGrid[row][col].state = draggedCell.state;
                 return newGrid;
             });
