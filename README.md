@@ -17,8 +17,8 @@ This application demonstrates how different pathfinding algorithms explore the g
 
 ## Future Improvements
 
--	Full implementation of Bidirectional BFS.
--   Add adjustable **speed** control
+-	~~Full implementation of Bidirectional BFS algorithm.~~
+-   ~~Add adjustable **speed** control~~
 -   Switch between **square** and **rounded** (hexagon-like) cell shapes.
 -	Add Dijkstra’s algorithm.
 -	Add Bidirectional Dijkstra’s algorithm.

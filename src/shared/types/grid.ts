@@ -3,6 +3,7 @@ export enum CellState {
     WALL = 'wall',
     START = 'start',
     END = 'end',
+    MEETING_POINT = 'meetingPoint',
     VISITED = 'visited',
     QUEUE = 'queue',
     PATH = 'path',
@@ -26,7 +27,7 @@ export type Cell = {
     row: number;
     col: number;
     state: CellState;
-    distance: number;
+    distance: number | string;
     parent: Point | null;
 };
 

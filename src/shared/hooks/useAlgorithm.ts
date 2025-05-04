@@ -27,11 +27,7 @@ export const useAlgorithm = ({ setGrid, INF, setAlgorithmState }: Props) => {
     });
 
     const animationRef = useRef<number | null>(null);
-
-    const pathAnimationTimeoutsRef = useRef<ReturnType<typeof setTimeout>[]>(
-        [],
-    );
-
+    const pathAnimationTimeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
     const startTimeRef = useRef<number>(0);
 
     const reconstructPath = ({ end, start, grid }: ReconstructPathProps) => {
@@ -92,7 +88,8 @@ export const useAlgorithm = ({ setGrid, INF, setAlgorithmState }: Props) => {
 
                     if (
                         newGrid[cell.row][cell.col].state !== CellState.START &&
-                        newGrid[cell.row][cell.col].state !== CellState.END
+                        newGrid[cell.row][cell.col].state !== CellState.END &&
+                        newGrid[cell.row][cell.col].state !== CellState.MEETING_POINT
                     ) {
                         // Create a new cell object to ensure React detects the change
                         newGrid[cell.row][cell.col] = {

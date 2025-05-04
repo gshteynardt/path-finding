@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { MouseEvent } from 'react';
 
 import { useCalculateGridDimensions } from '@/shared/hooks/useCalculateGridDimensions';
@@ -18,10 +18,7 @@ export const useGrid = ({ algorithmState }: Props) => {
     const [endCell, setEndCell] = useState({ row: 15, col: 25 });
     const [draggedCell, setDraggedCell] = useState<DraggedCell | null>();
     const { sizeR, sizeC, cellSize, start, end, gridContainerRef } = useCalculateGridDimensions(setGridState);
-
-    const stopMouseEvent = algorithmState === AlgorithmState.RUNNING ||
-        algorithmState === AlgorithmState.PAUSED ||
-        algorithmState === AlgorithmState.DRAWING_PATH;
+    const stopMouseEvent = [AlgorithmState.RUNNING, AlgorithmState.PAUSED, AlgorithmState.DRAWING_PATH].includes(algorithmState);
 
     const initializeGridState = useCallback(() => {
         const newGrid = initializeGrid({ sizeR, sizeC, start: startCell, end: endCell });

@@ -3,12 +3,16 @@ import { Play, Pause, RotateCcw, Trash2, Zap } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { Badge } from '@/shared/components/Badge';
 import { Slider } from '@/shared/components/Slider';
+import { Checkbox } from '@/shared/components/Checkbox';
+import { Label } from '@/shared/components/Label';
 import { getSpeedLabel } from '@/shared/utils';
 
 export type Props = {
     isDrawingPath: boolean;
     isRunning: boolean;
     speed: number;
+    bidirectional: boolean;
+    onChangeBidirectional: (checked: boolean) => void;
     setSpeed: (speed: number) => void;
     toggleRunning: () => void;
     clearWalls: () => void;
@@ -19,7 +23,9 @@ export const ControlsPanel = ({
     isDrawingPath,
     isRunning,
     speed,
+    bidirectional,
     setSpeed,
+    onChangeBidirectional,
     toggleRunning,
     clearWalls,
     resetGrid,
@@ -78,7 +84,21 @@ export const ControlsPanel = ({
                         Clear Walls
                     </Button>
                 </div>
-
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="bidirectional"
+                        checked={bidirectional}
+                        onCheckedChange={onChangeBidirectional}
+                        disabled={isRunning || isDrawingPath}
+                        className="data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500"
+                    />
+                    <Label
+                        htmlFor="bidirectional"
+                        className="text-sm text-slate-300"
+                    >
+                        Bi-directional
+                    </Label>
+                </div>
                 {/* Speed Control */}
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -87,7 +107,11 @@ export const ControlsPanel = ({
                         </h3>
                         <Badge
                             variant="outline"
-                            className={`border-slate-700 bg-slate-800/50 ${speed > 100 ? 'text-amber-400' : 'text-slate-300'}`}
+                            className={`border-slate-700 bg-slate-800/50 ${
+                                speed > 100
+                                    ? 'text-amber-400'
+                                    : 'text-slate-300'
+                            }`}
                         >
                             {getSpeedLabel(speed)}
                             {speed > 100 && (

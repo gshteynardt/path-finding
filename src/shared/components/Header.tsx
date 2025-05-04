@@ -21,6 +21,8 @@ export type Props = {
     isDrawingPath: boolean;
     isRunning: boolean;
     speed: number;
+    bidirectional: boolean;
+    onChangeBidirectional: (checked: boolean) => void;
     setSpeed: (speed: number) => void;
     toggleRunning: () => void;
     clearWalls: () => void;
@@ -31,6 +33,8 @@ export const Header = ({
     isDrawingPath,
     isRunning,
     speed,
+    bidirectional,
+    onChangeBidirectional,
     setSpeed,
     toggleRunning,
     clearWalls,
@@ -187,6 +191,8 @@ export const Header = ({
                     isRunning={isRunning}
                     isDrawingPath={isDrawingPath}
                     speed={speed}
+                    bidirectional={bidirectional}
+                    onChangeBidirectional={onChangeBidirectional}
                     setSpeed={setSpeed}
                     resetGrid={resetGrid}
                     toggleRunning={toggleRunning}

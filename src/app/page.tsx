@@ -6,11 +6,13 @@ import { Header } from '@/shared/components/Header';
 import { StatisticsPanel } from '@/shared/components/StatisticsPanel';
 import { useGrid } from '@/shared/hooks/useGrid';
 import { useBFS } from '@/shared/hooks/useBFS';
+import { useBidirectionalBFS } from '@/shared/hooks/useBidirectionalBFS';
 import { useAlgorithm } from '@/shared/hooks/useAlgorithm';
 import { AlgorithmState } from '@/shared/types';
 
 export default function Home() {
     const [algorithmState, setAlgorithmState] = useState<AlgorithmState>(AlgorithmState.IDLE);
+    const [bidirectional, setBidirectional] = useState(false);
 
     const {
         gridState,
@@ -48,7 +50,7 @@ export default function Home() {
     });
 
     const {
-        queue,
+        queue: bfsQueue,
         animateBFS,
         runAlgorithm,
         resetBFSState,
@@ -72,6 +74,29 @@ export default function Home() {
         reconstructPath,
     });
 
+    const {
+        queue: bidirectionalBFSQueue,
+        runBidirectionalBFS,
+        resetBidirectionalBFSState,
+        animateBidirectionalBFS,
+    } = useBidirectionalBFS({
+        grid,
+        sizeR,
+        sizeC,
+        start,
+        end,
+        speed,
+        INF,
+        animationRef,
+        pathAnimationTimeoutsRef,
+        startTimeRef,
+        algorithmState,
+        algorithmStats,
+        toggleAlgorithmState: setAlgorithmState,
+        setAlgorithmStats,
+        setGrid,
+    });
+
     const isRunning = algorithmState === AlgorithmState.RUNNING;
     const isComplete = algorithmState === AlgorithmState.COMPLETED;
     const isDrawingPath = algorithmState === AlgorithmState.DRAWING_PATH;
@@ -90,8 +115,13 @@ export default function Home() {
 
         initializeGrid();
         setAlgorithmStats((prev) => ({ ...prev, showStats: false }));
-        resetBFSState();
-    }, [animationRef, initializeGrid, pathAnimationTimeoutsRef, resetBFSState, setAlgorithmStats]);
+
+        if (bidirectional) {
+            resetBidirectionalBFSState();
+        } else {
+            resetBFSState();
+        }
+    }, [animationRef, bidirectional, initializeGrid, pathAnimationTimeoutsRef, resetBFSState, resetBidirectionalBFSState, setAlgorithmStats]);
 
     const toggleRunning = useCallback(() => {
         if (isDrawingPath) {
@@ -107,20 +137,25 @@ export default function Home() {
             }
         } else {
             setAlgorithmState(AlgorithmState.RUNNING);
+            const algorithm = bidirectional ? runBidirectionalBFS : runAlgorithm;
+            const animation = bidirectional ? animateBidirectionalBFS : animateBFS;
+            const queue = bidirectional ? bidirectionalBFSQueue : bfsQueue;
 
             if (queue.length === 0 || isComplete) {
-                runAlgorithm();
+                algorithm();
             } else {
-                animationRef.current = requestAnimationFrame(animateBFS);
+                animationRef.current = requestAnimationFrame(animation);
             }
         }
-    }, [animateBFS, animationRef, isComplete, isDrawingPath, isRunning, queue.length, runAlgorithm]);
+    }, [animateBFS, animateBidirectionalBFS, animationRef, bfsQueue, bidirectional, bidirectionalBFSQueue, isComplete, isDrawingPath, isRunning, runAlgorithm, runBidirectionalBFS]);
 
     return (
         <main className="flex h-screen w-full flex-col overflow-hidden bg-gradient-to-br from-slate-950 to-slate-900 text-white">
             <Header
                 isRunning={isRunning}
                 isDrawingPath={isDrawingPath}
+                bidirectional={bidirectional}
+                onChangeBidirectional={setBidirectional}
                 speed={speed}
                 setSpeed={setSpeed}
                 resetGrid={resetGrid}
