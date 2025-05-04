@@ -2,12 +2,7 @@ import { useRef } from 'react';
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 
 import { AlgorithmState, CellState } from '@/shared/types';
-import type {
-    Point,
-    Cell,
-    Grid,
-    AlgorithmStats,
-} from '@/shared/types';
+import type { Point, Cell, Grid, AlgorithmStats } from '@/shared/types';
 import {
     getCellId,
     refreshGrid,
@@ -132,7 +127,8 @@ export const useBidirectionalBFS = ({
             return;
         }
 
-        const stepsPerFrame = speed > 100 ? Math.floor((speed - 100) / 10) + 2 : 1;
+        const stepsPerFrame =
+            speed > 100 ? Math.floor((speed - 100) / 10) + 2 : 1;
         let found = false;
 
         for (
@@ -175,13 +171,16 @@ export const useBidirectionalBFS = ({
                     parentEnd: parentEnd.current,
                 });
 
-                gridRef.current[meetingPoint.row][meetingPoint.col].distance = `${pathToStart.length} + ${pathToEnd.length}`;
+                gridRef.current[meetingPoint.row][
+                    meetingPoint.col
+                ].distance = `${pathToStart.length} + ${pathToEnd.length}`;
 
                 setGrid([...gridRef.current]);
 
                 const endTime = performance.now();
                 const timeTaken = endTime - (startTimeRef.current ?? 0);
-                const operations = queueRefStart.current.length + queueRefEnd.current.length;
+                const operations =
+                    queueRefStart.current.length + queueRefEnd.current.length;
 
                 setAlgorithmStats({
                     pathLength: pathToStart.length + pathToEnd.length,
@@ -190,7 +189,6 @@ export const useBidirectionalBFS = ({
                     showStats: true,
                 });
 
-                toggleAlgorithmState(AlgorithmState.COMPLETED);
                 animatePathDrawing(pathToStart.reverse(), pathToEnd.reverse());
                 return;
             }
@@ -225,8 +223,10 @@ export const useBidirectionalBFS = ({
                 const newGrid = [...grid];
 
                 if (
-                    newGrid[startCell.row][startCell.col].state !== CellState.START &&
-                    newGrid[startCell.row][startCell.col].state !== CellState.MEETING_POINT
+                    newGrid[startCell.row][startCell.col].state !==
+                        CellState.START &&
+                    newGrid[startCell.row][startCell.col].state !==
+                        CellState.MEETING_POINT
                 ) {
                     newGrid[startCell.row][startCell.col] = {
                         ...newGrid[startCell.row][startCell.col],
@@ -236,7 +236,8 @@ export const useBidirectionalBFS = ({
 
                 if (
                     newGrid[endCell.row][endCell.col].state !== CellState.END &&
-                    newGrid[endCell.row][endCell.col].state !== CellState.MEETING_POINT
+                    newGrid[endCell.row][endCell.col].state !==
+                        CellState.MEETING_POINT
                 ) {
                     newGrid[endCell.row][endCell.col] = {
                         ...newGrid[endCell.row][endCell.col],
@@ -248,8 +249,10 @@ export const useBidirectionalBFS = ({
                     const newGrid = [...prevGrid];
 
                     if (
-                        newGrid[startCell.row][startCell.col].state !== CellState.START &&
-                        newGrid[startCell.row][startCell.col].state !== CellState.MEETING_POINT
+                        newGrid[startCell.row][startCell.col].state !==
+                            CellState.START &&
+                        newGrid[startCell.row][startCell.col].state !==
+                            CellState.MEETING_POINT
                     ) {
                         newGrid[startCell.row][startCell.col] = {
                             ...newGrid[startCell.row][startCell.col],
@@ -258,8 +261,10 @@ export const useBidirectionalBFS = ({
                     }
 
                     if (
-                        newGrid[endCell.row][endCell.col].state !== CellState.END &&
-                        newGrid[endCell.row][endCell.col].state !== CellState.MEETING_POINT
+                        newGrid[endCell.row][endCell.col].state !==
+                            CellState.END &&
+                        newGrid[endCell.row][endCell.col].state !==
+                            CellState.MEETING_POINT
                     ) {
                         newGrid[endCell.row][endCell.col] = {
                             ...newGrid[endCell.row][endCell.col],
@@ -269,7 +274,6 @@ export const useBidirectionalBFS = ({
 
                     return newGrid;
                 });
-
             }, delay * i);
 
             pathAnimationTimeoutsRef.current.push(timeout);
@@ -284,8 +288,10 @@ export const useBidirectionalBFS = ({
                     const newGrid = [...prevGrid];
 
                     if (
-                        newGrid[startCell.row][startCell.col].state !== CellState.START &&
-                        newGrid[startCell.row][startCell.col].state !== CellState.MEETING_POINT
+                        newGrid[startCell.row][startCell.col].state !==
+                            CellState.START &&
+                        newGrid[startCell.row][startCell.col].state !==
+                            CellState.MEETING_POINT
                     ) {
                         newGrid[startCell.row][startCell.col] = {
                             ...newGrid[startCell.row][startCell.col],
@@ -295,7 +301,6 @@ export const useBidirectionalBFS = ({
 
                     return newGrid;
                 });
-
             }, delay * i);
 
             pathAnimationTimeoutsRef.current.push(timeout);
@@ -310,22 +315,25 @@ export const useBidirectionalBFS = ({
                     const newGrid = [...prevGrid];
 
                     if (
-                        newGrid[endCell.row][endCell.col].state !== CellState.END &&
-                        newGrid[endCell.row][endCell.col].state !== CellState.MEETING_POINT
+                        newGrid[endCell.row][endCell.col].state !==
+                            CellState.END &&
+                        newGrid[endCell.row][endCell.col].state !==
+                            CellState.MEETING_POINT
                     ) {
                         newGrid[endCell.row][endCell.col] = {
                             ...newGrid[endCell.row][endCell.col],
                             state: CellState.PATH,
                         };
                     }
+
                     return newGrid;
                 });
-
             }, delay * i);
 
-            toggleAlgorithmState(AlgorithmState.COMPLETED)
             pathAnimationTimeoutsRef.current.push(timeout);
         }
+
+        toggleAlgorithmState(AlgorithmState.COMPLETED);
     };
 
     const resetBidirectionalBFSState = () => {

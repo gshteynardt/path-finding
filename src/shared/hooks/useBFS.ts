@@ -125,7 +125,6 @@ export const useBFS = ({
                     showStats: true,
                 });
 
-                toggleAlgorithmState(AlgorithmState.COMPLETED);
                 animatePathDrawing(pathFound);
                 return;
             }

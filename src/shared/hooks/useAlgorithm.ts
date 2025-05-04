@@ -17,7 +17,7 @@ export type Props = {
 };
 
 export const useAlgorithm = ({ setGrid, INF, setAlgorithmState }: Props) => {
-    const [speed, setSpeed] = useState(50);
+    const [speed, setSpeed] = useState(80);
 
     const [algorithmStats, setAlgorithmStats] = useState<AlgorithmStats>({
         pathLength: 0,
