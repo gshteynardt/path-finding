@@ -50,7 +50,7 @@ export const Header = ({
                         <Hexagon className="size-4 text-white" />
                     </div>
                     <h1 className="bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 bg-clip-text text-2xl font-bold text-transparent">
-                        Pathfinding Visualizer
+                        Pathfinding Visualizer (BFS)
                     </h1>
                 </div>
                 <div className="flex items-center gap-2">
